@@ -23436,17 +23436,17 @@
         {
           "start": 4,
           "end": 4,
-          "text": "以 L <= R 搜索闭区间"
+          "text": "        while L <= R:"
         },
         {
           "start": 6,
           "end": 6,
-          "text": "比较 nums[mid] 与 target，严格小于才向右"
+          "text": "            if nums[mid] < target:"
         },
         {
           "start": 10,
           "end": 10,
-          "text": "返回下界 L，而不是最后检查的 mid"
+          "text": "        return L"
         }
       ],
       "challenge": {
@@ -23724,17 +23724,17 @@
         {
           "start": 7,
           "end": 7,
-          "text": "用 mid // n 与 mid % n 映射二维坐标"
+          "text": "            x = matrix[mid // n][mid % n]"
         },
         {
           "start": 8,
           "end": 8,
-          "text": "使用 <= target 保留左侧前缀并继续向右搜索"
+          "text": "            if x <= target:"
         },
         {
           "start": 12,
           "end": 12,
-          "text": "用 R 的完整二维坐标检查是否恰好相等"
+          "text": "        return R >= 0 and matrix[R // n][R % n] == target"
         }
       ],
       "challenge": {
@@ -24156,22 +24156,22 @@
         {
           "start": 3,
           "end": 3,
-          "text": "first 的 a、T 参数未被函数体使用"
+          "text": "        def first(a,T):"
         },
         {
           "start": 7,
           "end": 7,
-          "text": "first 仅在严格小于 target 时右移"
+          "text": "                if nums[mid] < target:"
         },
         {
           "start": 17,
           "end": 17,
-          "text": "last 在小于或等于 target 时右移"
+          "text": "                if nums[mid] <= target:"
         },
         {
           "start": 23,
           "end": 23,
-          "text": "顺序组合第一个与最后一个位置"
+          "text": "        return [first(nums, target), last(nums, target)]"
         }
       ],
       "challenge": {
@@ -24560,22 +24560,22 @@
         {
           "start": 5,
           "end": 5,
-          "text": "以 nums[-1] 为阈值给旋转两段编号"
+          "text": "            return 0 if x > last else 1"
         },
         {
           "start": 7,
           "end": 7,
-          "text": "不同段按段号先后构造前缀"
+          "text": "            if seg(x) != seg(target):"
         },
         {
           "start": 9,
           "end": 9,
-          "text": "同段时才按数值 <= target 判断"
+          "text": "            return x <= target"
         },
         {
           "start": 17,
           "end": 17,
-          "text": "返回 r 并验证值相等"
+          "text": "        return r if r >= 0 and nums[r] == target else -1"
         }
       ],
       "challenge": {
@@ -24891,17 +24891,17 @@
         {
           "start": 6,
           "end": 6,
-          "text": "始终与 nums[-1] 比较，而非变化的右端点"
+          "text": "            if nums[mid] > nums[-1]:"
         },
         {
           "start": 9,
           "end": 9,
-          "text": "小于等于末值时向左收缩"
+          "text": "                r = mid - 1"
         },
         {
           "start": 10,
           "end": 10,
-          "text": "返回 nums[l] 的值"
+          "text": "        return nums[l]"
         }
       ],
       "challenge": {
@@ -25190,27 +25190,27 @@
         {
           "start": 4,
           "end": 4,
-          "text": "交换数组，使 nums1 是较短数组"
+          "text": "            nums1, nums2 = nums2, nums1"
         },
         {
           "start": 6,
           "end": 6,
-          "text": "固定左半部分元素总数 half"
+          "text": "        half = (m + n + 1) // 2"
         },
         {
           "start": 11,
           "end": 11,
-          "text": "用 -inf 表示 nums1 左边界缺失"
+          "text": "            al = nums1[i - 1] if i > 0 else -inf"
         },
         {
           "start": 15,
           "end": 15,
-          "text": "交叉条件判断切分是否合法"
+          "text": "            if al <= br and bl <= ar:"
         },
         {
           "start": 18,
           "end": 18,
-          "text": "偶数时计算左右边界平均值"
+          "text": "                return (max(al, bl) + min(ar, br)) / 2"
         }
       ],
       "challenge": {
@@ -25605,22 +25605,22 @@
         {
           "start": 3,
           "end": 3,
-          "text": "建立右括号到左括号的配对表"
+          "text": "        pair = {\")\": \"(\", \"}\":\"{\", \"]\":\"[\"}"
         },
         {
           "start": 8,
           "end": 8,
-          "text": "空栈或栈顶类型不符时立即失败"
+          "text": "            elif not st or st[-1] != pair[ch]:"
         },
         {
           "start": 11,
           "end": 11,
-          "text": "正确匹配才弹出栈顶"
+          "text": "                st.pop()"
         },
         {
           "start": 12,
           "end": 12,
-          "text": "结束后要求栈为空"
+          "text": "        return not st"
         }
       ],
       "challenge": {
@@ -25887,27 +25887,27 @@
         {
           "start": 9,
           "end": 9,
-          "text": "使用 <= 保留重复最小值记录"
+          "text": "        if not self.mn or value <= self.mn[-1]:"
         },
         {
           "start": 13,
           "end": 13,
-          "text": "pop 的返回值同时参与 mn 同步判断"
+          "text": "        if self.st.pop() == self.mn[-1]:"
         },
         {
           "start": 17,
           "end": 17,
-          "text": "top 直接读取 st[-1]"
+          "text": "        return self.st[-1]"
         },
         {
           "start": 20,
           "end": 20,
-          "text": "getMin 直接读取 mn[-1]"
+          "text": "        return self.mn[-1]"
         },
         {
           "start": 23,
           "end": 23,
-          "text": "保留平台生成的 MinStack 调用示例注释"
+          "text": "# Your MinStack object will be instantiated and called as such:"
         }
       ],
       "challenge": {
@@ -26244,27 +26244,27 @@
         {
           "start": 6,
           "end": 6,
-          "text": "非右括号字符逐个入栈，包括数字和左括号"
+          "text": "                st.append(ch)"
         },
         {
           "start": 10,
           "end": 10,
-          "text": "通过左接恢复片段原顺序"
+          "text": "                sub = st.pop() + sub"
         },
         {
           "start": 13,
           "end": 13,
-          "text": "isdigit 支持连续多位倍数"
+          "text": "            while st and st[-1].isdigit():"
         },
         {
           "start": 15,
           "end": 15,
-          "text": "字符串乘法生成完整展开片段"
+          "text": "            st.append(sub * int(k))"
         },
         {
           "start": 16,
           "end": 16,
-          "text": "join 混合的字符与展开片段"
+          "text": "        return \"\".join(st)"
         }
       ],
       "challenge": {
@@ -26632,22 +26632,22 @@
         {
           "start": 4,
           "end": 4,
-          "text": "答案初始化为 0，保留无更高温的默认值"
+          "text": "        ans = [0] * len(temperatures)"
         },
         {
           "start": 6,
           "end": 6,
-          "text": "栈顶温度严格小于当前温度才解决"
+          "text": "            while days and temperatures[days[-1]] < x:"
         },
         {
           "start": 8,
           "end": 8,
-          "text": "写入当前下标与旧下标之差"
+          "text": "                ans[j] = i - j"
         },
         {
           "start": 9,
           "end": 9,
-          "text": "每轮把当前下标压栈"
+          "text": "            days.append(i)"
         }
       ],
       "challenge": {
@@ -27003,22 +27003,22 @@
         {
           "start": 4,
           "end": 4,
-          "text": "原地追加零哨兵以结算末尾柱子"
+          "text": "        heights.append(0)"
         },
         {
           "start": 6,
           "end": 6,
-          "text": "严格大于当前高度时才弹栈"
+          "text": "            while st and heights[st[-1]] > x:"
         },
         {
           "start": 8,
           "end": 8,
-          "text": "左边界来自弹栈后的栈顶或 -1"
+          "text": "                left = st[-1] if st else -1"
         },
         {
           "start": 9,
           "end": 9,
-          "text": "按 i-left-1 计算连续宽度并更新 best"
+          "text": "                best = max(best, top * (i - left - 1))"
         }
       ],
       "challenge": {
@@ -27405,17 +27405,17 @@
         {
           "start": 5,
           "end": 5,
-          "text": "每次先执行 heapq.heappush"
+          "text": "            heapq.heappush(heap, x)"
         },
         {
           "start": 6,
           "end": 6,
-          "text": "超过 k 时弹出当前最小候选"
+          "text": "            if len(heap) > k:"
         },
         {
           "start": 8,
           "end": 8,
-          "text": "返回最小堆堆顶，即第 k 大"
+          "text": "        return heap[0]"
         }
       ],
       "challenge": {
@@ -27715,22 +27715,22 @@
         {
           "start": 3,
           "end": 3,
-          "text": "Counter(nums) 一次完成频次统计"
+          "text": "        cnt = Counter(nums)"
         },
         {
           "start": 6,
           "end": 6,
-          "text": "堆元素为 (频次,数值) 元组"
+          "text": "            heapq.heappush(heap, (c, x))"
         },
         {
           "start": 8,
           "end": 8,
-          "text": "超限时弹出最低频候选"
+          "text": "                heapq.heappop(heap)"
         },
         {
           "start": 9,
           "end": 9,
-          "text": "按当前堆数组顺序解包返回值"
+          "text": "        return [x for c, x in heap]"
         }
       ],
       "challenge": {
@@ -28135,37 +28135,37 @@
         {
           "start": 8,
           "end": 8,
-          "text": "right 非空且 num 不小于其堆顶时才直接进 right"
+          "text": "        if self.right and num >= self.right[0]:"
         },
         {
           "start": 11,
           "end": 11,
-          "text": "否则把 -num 压入 left"
+          "text": "            heapq.heappush(self.left, -num)"
         },
         {
           "start": 12,
           "end": 12,
-          "text": "先修正 left 比 right 多出的情况"
+          "text": "        if len(self.left) > len(self.right) + 1:"
         },
         {
           "start": 14,
           "end": 14,
-          "text": "再修正 right 比 left 多出的情况"
+          "text": "        if len(self.right) > len(self.left):"
         },
         {
           "start": 18,
           "end": 18,
-          "text": "等大时利用负数换算两个堆顶的平均值"
+          "text": "            median = (self.right[0] - self.left[0]) / 2"
         },
         {
           "start": 24,
           "end": 24,
-          "text": "保留正常返回之后的不可达 return 0"
+          "text": "        return 0"
         },
         {
           "start": 27,
           "end": 27,
-          "text": "保留平台生成的 MedianFinder 调用示例注释"
+          "text": "# Your MedianFinder object will be instantiated and called as such:"
         }
       ],
       "challenge": {

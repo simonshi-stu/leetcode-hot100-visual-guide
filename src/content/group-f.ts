@@ -92,9 +92,9 @@ export const guides: Record<string, Guide> = {
     space: 'O(1)',
     spaceNote: '只使用 L、R、mid 三个标量，没有切片或新数组。',
     keyLines: [
-      { line: 4, text: '以 L <= R 搜索闭区间' },
-      { line: 6, text: '比较 nums[mid] 与 target，严格小于才向右' },
-      { line: 10, text: '返回下界 L，而不是最后检查的 mid' },
+      { line: 4, text: '        while L <= R:' },
+      { line: 6, text: '            if nums[mid] < target:' },
+      { line: 10, text: '        return L' },
     ],
     challenge: '如果数组允许重复值且要求返回 target 最后一次出现的位置，应怎样修改比较分支？',
     similar: [
@@ -151,9 +151,9 @@ export const guides: Record<string, Guide> = {
     space: 'O(1)',
     spaceNote: '没有真正创建展开数组，只维护展开下标与两个维度长度。',
     keyLines: [
-      { line: 7, text: '用 mid // n 与 mid % n 映射二维坐标' },
-      { line: 8, text: '使用 <= target 保留左侧前缀并继续向右搜索' },
-      { line: 12, text: '用 R 的完整二维坐标检查是否恰好相等' },
+      { line: 7, text: '            x = matrix[mid // n][mid % n]' },
+      { line: 8, text: '            if x <= target:' },
+      { line: 12, text: '        return R >= 0 and matrix[R // n][R % n] == target' },
     ],
     challenge: '如果只保证每行、每列分别升序，但行间不再整体有序，还能展平后二分吗？',
     similar: [
@@ -211,10 +211,10 @@ export const guides: Record<string, Guide> = {
     space: 'O(1)',
     spaceNote: '没有保存重复块；两次搜索只使用标量，返回列表长度固定为 2。',
     keyLines: [
-      { line: 3, text: 'first 的 a、T 参数未被函数体使用' },
-      { line: 7, text: 'first 仅在严格小于 target 时右移' },
-      { line: 17, text: 'last 在小于或等于 target 时右移' },
-      { line: 23, text: '顺序组合第一个与最后一个位置' },
+      { line: 3, text: '        def first(a,T):' },
+      { line: 7, text: '                if nums[mid] < target:' },
+      { line: 17, text: '                if nums[mid] <= target:' },
+      { line: 23, text: '        return [first(nums, target), last(nums, target)]' },
     ],
     challenge: '若要把这两个内部函数改成真正可复用的形式，应该改哪几处读取？',
     similar: [
@@ -274,10 +274,10 @@ export const guides: Record<string, Guide> = {
     space: 'O(1)',
     spaceNote: 'last 为标量，seg 与 in_pre 是嵌套函数，没有创建辅助数组或递归调用。',
     keyLines: [
-      { line: 5, text: '以 nums[-1] 为阈值给旋转两段编号' },
-      { line: 7, text: '不同段按段号先后构造前缀' },
-      { line: 9, text: '同段时才按数值 <= target 判断' },
-      { line: 17, text: '返回 r 并验证值相等' },
+      { line: 5, text: '            return 0 if x > last else 1' },
+      { line: 7, text: '            if seg(x) != seg(target):' },
+      { line: 9, text: '            return x <= target' },
+      { line: 17, text: '        return r if r >= 0 and nums[r] == target else -1' },
     ],
     challenge: '为什么搜索旋转数组时选择 nums[-1]，而寻找最小值的 153 题也反复与 nums[-1] 比较？',
     similar: [
@@ -333,9 +333,9 @@ export const guides: Record<string, Guide> = {
     space: 'O(1)',
     spaceNote: '只保存 l、r、mid，不排序也不复制数组。',
     keyLines: [
-      { line: 6, text: '始终与 nums[-1] 比较，而非变化的右端点' },
-      { line: 9, text: '小于等于末值时向左收缩' },
-      { line: 10, text: '返回 nums[l] 的值' },
+      { line: 6, text: '            if nums[mid] > nums[-1]:' },
+      { line: 9, text: '                r = mid - 1' },
+      { line: 10, text: '        return nums[l]' },
     ],
     challenge: '若数组可能出现重复值，为什么 nums[mid]==nums[-1] 时不能确定最小值在哪一侧？',
     similar: [
@@ -393,11 +393,11 @@ export const guides: Record<string, Guide> = {
     space: 'O(1)',
     spaceNote: '只使用少量标量，不创建合并数组；±inf 是浮点无穷大哨兵，不是内建对象。',
     keyLines: [
-      { line: 4, text: '交换数组，使 nums1 是较短数组' },
-      { line: 6, text: '固定左半部分元素总数 half' },
-      { line: 11, text: '用 -inf 表示 nums1 左边界缺失' },
-      { line: 15, text: '交叉条件判断切分是否合法' },
-      { line: 18, text: '偶数时计算左右边界平均值' },
+      { line: 4, text: '            nums1, nums2 = nums2, nums1' },
+      { line: 6, text: '        half = (m + n + 1) // 2' },
+      { line: 11, text: '            al = nums1[i - 1] if i > 0 else -inf' },
+      { line: 15, text: '            if al <= br and bl <= ar:' },
+      { line: 18, text: '                return (max(al, bl) + min(ar, br)) / 2' },
     ],
     challenge: '为什么把较长数组放在 nums2，可以既保证 j 落在 [0,n]，又把二分次数降到 log(min(m,n))？',
     similar: [
@@ -455,10 +455,10 @@ export const guides: Record<string, Guide> = {
     space: 'O(n)',
     spaceNote: '最坏情况下所有字符都是左括号，st 保存 n 个字符。',
     keyLines: [
-      { line: 3, text: '建立右括号到左括号的配对表' },
-      { line: 8, text: '空栈或栈顶类型不符时立即失败' },
-      { line: 11, text: '正确匹配才弹出栈顶' },
-      { line: 12, text: '结束后要求栈为空' },
+      { line: 3, text: '        pair = {")": "(", "}":"{", "]":"["}' },
+      { line: 8, text: '            elif not st or st[-1] != pair[ch]:' },
+      { line: 11, text: '                st.pop()' },
+      { line: 12, text: '        return not st' },
     ],
     challenge: '如果把 pair 的键和值反过来写，哪些分支需要一起调整？',
     similar: [
@@ -515,11 +515,11 @@ export const guides: Record<string, Guide> = {
     space: 'O(n)',
     spaceNote: 'st 最多 n 项，mn 也最多 n 项；重复最小值会使 mn 与 st 等长。',
     keyLines: [
-      { line: 9, text: '使用 <= 保留重复最小值记录' },
-      { line: 13, text: 'pop 的返回值同时参与 mn 同步判断' },
-      { line: 17, text: 'top 直接读取 st[-1]' },
-      { line: 20, text: 'getMin 直接读取 mn[-1]' },
-      { line: 23, text: '保留平台生成的 MinStack 调用示例注释' },
+      { line: 9, text: '        if not self.mn or value <= self.mn[-1]:' },
+      { line: 13, text: '        if self.st.pop() == self.mn[-1]:' },
+      { line: 17, text: '        return self.st[-1]' },
+      { line: 20, text: '        return self.mn[-1]' },
+      { line: 23, text: '# Your MinStack object will be instantiated and called as such:' },
     ],
     challenge: '为什么即使两个 -2 的值完全相同，也不能在第二次 push(-2) 时跳过 mn 记录？',
     similar: [
@@ -578,11 +578,11 @@ export const guides: Record<string, Guide> = {
     space: 'O(n+S)',
     spaceNote: '展开前栈最多保存 O(n) 个单字符；展开后的片段与最终 join 结果需要保存输出规模 S 的字符。若只统计扫描栈而不计结果字符串，则是 O(n)。',
     keyLines: [
-      { line: 6, text: '非右括号字符逐个入栈，包括数字和左括号' },
-      { line: 10, text: '通过左接恢复片段原顺序' },
-      { line: 13, text: 'isdigit 支持连续多位倍数' },
-      { line: 15, text: '字符串乘法生成完整展开片段' },
-      { line: 16, text: 'join 混合的字符与展开片段' },
+      { line: 6, text: '                st.append(ch)' },
+      { line: 10, text: '                sub = st.pop() + sub' },
+      { line: 13, text: '            while st and st[-1].isdigit():' },
+      { line: 15, text: '            st.append(sub * int(k))' },
+      { line: 16, text: '        return "".join(st)' },
     ],
     challenge: '如果要返回展开后的字符串，却希望在时间和空间分析中避免混淆输入规模与输出规模，应分别定义哪两个变量？',
     similar: [
@@ -642,10 +642,10 @@ export const guides: Record<string, Guide> = {
     space: 'O(n)',
     spaceNote: 'days 最坏保存 n 个递减温度下标；ans 本身需要 n 个整数。',
     keyLines: [
-      { line: 4, text: '答案初始化为 0，保留无更高温的默认值' },
-      { line: 6, text: '栈顶温度严格小于当前温度才解决' },
-      { line: 8, text: '写入当前下标与旧下标之差' },
-      { line: 9, text: '每轮把当前下标压栈' },
+      { line: 4, text: '        ans = [0] * len(temperatures)' },
+      { line: 6, text: '            while days and temperatures[days[-1]] < x:' },
+      { line: 8, text: '                ans[j] = i - j' },
+      { line: 9, text: '            days.append(i)' },
     ],
     challenge: '为什么栈中只保存下标递增的子序列，就能保证每个日期最多弹出一次？',
     similar: [
@@ -706,10 +706,10 @@ export const guides: Record<string, Guide> = {
     space: 'O(n)',
     spaceNote: 'st 最坏保存全部递增高度下标；best 与左右边界只占常数空间。',
     keyLines: [
-      { line: 4, text: '原地追加零哨兵以结算末尾柱子' },
-      { line: 6, text: '严格大于当前高度时才弹栈' },
-      { line: 8, text: '左边界来自弹栈后的栈顶或 -1' },
-      { line: 9, text: '按 i-left-1 计算连续宽度并更新 best' },
+      { line: 4, text: '        heights.append(0)' },
+      { line: 6, text: '            while st and heights[st[-1]] > x:' },
+      { line: 8, text: '                left = st[-1] if st else -1' },
+      { line: 9, text: '                best = max(best, top * (i - left - 1))' },
     ],
     challenge: '严格 > 与 >= 在本实现中是否影响最终最大面积？为什么相等柱即使被提前弹出，也不会漏掉完整宽度？',
     similar: [
@@ -771,9 +771,9 @@ export const guides: Record<string, Guide> = {
     space: 'O(k)',
     spaceNote: 'heap 最多保留 k 个元素；不修改输入 nums。',
     keyLines: [
-      { line: 5, text: '每次先执行 heapq.heappush' },
-      { line: 6, text: '超过 k 时弹出当前最小候选' },
-      { line: 8, text: '返回最小堆堆顶，即第 k 大' },
+      { line: 5, text: '            heapq.heappush(heap, x)' },
+      { line: 6, text: '            if len(heap) > k:' },
+      { line: 8, text: '        return heap[0]' },
     ],
     challenge: '如果把 pop 放在 push 之前，前 k 个元素会造成什么问题？',
     similar: [
@@ -832,10 +832,10 @@ export const guides: Record<string, Guide> = {
     space: 'O(u+k)',
     spaceNote: 'cnt 保存 u 个不同值，heap 保存 k 个元组，返回列表保存 k 个整数；不计输入数组。',
     keyLines: [
-      { line: 3, text: 'Counter(nums) 一次完成频次统计' },
-      { line: 6, text: '堆元素为 (频次,数值) 元组' },
-      { line: 8, text: '超限时弹出最低频候选' },
-      { line: 9, text: '按当前堆数组顺序解包返回值' },
+      { line: 3, text: '        cnt = Counter(nums)' },
+      { line: 6, text: '            heapq.heappush(heap, (c, x))' },
+      { line: 8, text: '                heapq.heappop(heap)' },
+      { line: 9, text: '        return [x for c, x in heap]' },
     ],
     challenge: '为什么最终结果不需要排序，而如果题目要求按频率降序输出，就必须增加额外步骤？',
     similar: [
@@ -893,13 +893,13 @@ export const guides: Record<string, Guide> = {
     space: 'O(n)',
     spaceNote: '两个堆合计保存每个已添加整数一次；left 的负数不增加元素个数。',
     keyLines: [
-      { line: 8, text: 'right 非空且 num 不小于其堆顶时才直接进 right' },
-      { line: 11, text: '否则把 -num 压入 left' },
-      { line: 12, text: '先修正 left 比 right 多出的情况' },
-      { line: 14, text: '再修正 right 比 left 多出的情况' },
-      { line: 18, text: '等大时利用负数换算两个堆顶的平均值' },
-      { line: 24, text: '保留正常返回之后的不可达 return 0' },
-      { line: 27, text: '保留平台生成的 MedianFinder 调用示例注释' },
+      { line: 8, text: '        if self.right and num >= self.right[0]:' },
+      { line: 11, text: '            heapq.heappush(self.left, -num)' },
+      { line: 12, text: '        if len(self.left) > len(self.right) + 1:' },
+      { line: 14, text: '        if len(self.right) > len(self.left):' },
+      { line: 18, text: '            median = (self.right[0] - self.left[0]) / 2' },
+      { line: 24, text: '        return 0' },
+      { line: 27, text: '# Your MedianFinder object will be instantiated and called as such:' },
     ],
     challenge: '为什么 addNum 结束后不需要再显式比较 -left[0] 与 right[0]，大小平衡是否自动保证跨堆有序？',
     similar: [
