@@ -1,0 +1,853 @@
+import type { Guide } from '../types';
+
+export const guides: Record<string, Guide> = {
+  '136': {
+    id: 136,
+    title: '只出现一次的数字',
+    slug: 'single-number',
+    difficulty: '简单',
+    category: '技巧',
+    summary:
+      '把整段扫描压缩成一个异或寄存器：相同数字成对消去，最后留下的就是唯一出现一次的数。',
+    input: '一个整数数组 nums；除一个元素只出现一次外，其余每个元素都恰好出现两次。',
+    output: '返回只出现一次的元素，不需要额外返回下标。',
+    core: 'ans 从 0 开始，对每个元素执行 ans ^= x；利用 a ^ a = 0 与 a ^ 0 = a 完成抵消。',
+    walkthrough: [
+      '先建立寄存器 ans = 0，它是异或运算的单位元。',
+      '从左到右读取数组，每读一个数就把当前寄存器与该数异或。',
+      '出现两次的数无论相隔多远，都会在交换律和结合律的作用下互相抵消。',
+      '扫描结束后，ans 中只剩那个只出现一次的值。',
+    ],
+    pitfalls: [
+      '不要用求和或乘积替代异或；它们在一般整数范围内并不具备同样稳定的抵消性质。',
+      'ans 必须初始化为 0，不能初始化为 nums[0] 后又把 nums[0] 扫描一遍。',
+      '异或是按二进制位独立运算，不要把 ^ 理解成幂运算。',
+      '题目保证只有一个单身元素；若输入不满足这一前提，答案可能只是剩余的异或和。',
+    ],
+    observation: '扫描顺序不影响最终结果，因为异或满足交换律和结合律。',
+    mechanism:
+      '每一位上，出现偶数次的 1 会相互抵消；唯一元素的二进制位因此被完整保留在 ans 中。',
+    invariant: '处理完前 i 个元素后，ans 等于这 i 个元素的异或和。',
+    termination: 'for 循环每次消费一个元素，处理完长度为 n 的数组后自然结束。',
+    counterexample:
+      '反例提醒：[1, 1] 不满足“恰有一个单身元素”的前提，代码会返回 0，但 0 未必是输入中的有效答案。',
+    naive: '用哈希表记录频次，再找出频次为 1 的键，时间复杂度为 O(n)，但需要 O(n) 额外空间。',
+    time: 'O(n)',
+    timeNote: '每个元素只被读取一次，每次异或都是常数时间。',
+    space: 'O(1)',
+    spaceNote: '只维护 ans 一个整数寄存器，不随输入规模增长。',
+    keyLines: [
+      {
+        start: 3,
+        end: 6,
+        text: '        ans = 0\n        for x in nums:\n            ans ^= x\n        return ans',
+      },
+    ],
+    challenge: {
+      question: '如果每个其他元素都出现三次，单个 ans 还能否直接抵消？',
+      hint: '观察同一个二进制位上三个 1 异或后剩下什么。',
+      answer: '不能；三个相同值异或会留下该值本身，需要逐位统计出现次数模 3，或维护两个寄存器。',
+    },
+    similar: [
+      {
+        id: 137,
+        title: '只出现一次的数字 II',
+        slug: 'single-number-ii',
+        role: '同类巩固',
+        reason: '仍利用按位统计，但其他元素出现三次，单个异或寄存器不足以直接抵消。',
+      },
+      {
+        id: 260,
+        title: '只出现一次的数字 III',
+        slug: 'single-number-iii',
+        role: '进阶挑战',
+        reason: '保留异或消去思想，却有两个单身值，需要按差异位把它们分到两组。',
+      },
+    ],
+    viz: {
+      family: 'trick',
+      data: { values: [4, 1, 2, 1, 2] },
+      frames: [
+        {
+          title: '建立异或寄存器',
+          detail: 'ans = 0，尚未读取任何元素。',
+          state: {
+            values: [4, 1, 2, 1, 2],
+            index: -1,
+            bits: 0,
+            answer: 'ans = 0',
+            note: 'bits 槽位显示十进制的 ans；0 是异或单位元。',
+          },
+        },
+        {
+          title: '读入 4',
+          detail: '0 ^ 4 = 4，寄存器第一次非零。',
+          state: {
+            values: [4, 1, 2, 1, 2],
+            index: 0,
+            bits: 4,
+            answer: 'ans = 4',
+            note: '当前焦点是下标 0，值为 4。',
+          },
+        },
+        {
+          title: '读入 1',
+          detail: '4 ^ 1 = 5，两个不同值暂时同时保留。',
+          state: {
+            values: [4, 1, 2, 1, 2],
+            index: 1,
+            bits: 5,
+            answer: 'ans = 5',
+            note: '异或不会产生普通加法意义上的进位。',
+          },
+        },
+        {
+          title: '读入第一个 2',
+          detail: '5 ^ 2 = 7。',
+          state: {
+            values: [4, 1, 2, 1, 2],
+            index: 2,
+            bits: 7,
+            answer: 'ans = 7',
+            note: '此时三个已读元素都还没有成对抵消。',
+          },
+        },
+        {
+          title: '第二个 1 抵消第一个 1',
+          detail: '7 ^ 1 = 6，低位上的两个 1 被消去。',
+          state: {
+            values: [4, 1, 2, 1, 2],
+            index: 3,
+            bits: 6,
+            answer: 'ans = 6',
+            note: '即便两个 1 不相邻，异或结果仍然一致。',
+          },
+        },
+        {
+          title: '第二个 2 抵消第一个 2',
+          detail: '6 ^ 2 = 4，所有成对值都已消去。',
+          state: {
+            values: [4, 1, 2, 1, 2],
+            index: 4,
+            bits: 4,
+            answer: 'ans = 4',
+            note: '剩余寄存器值与只出现一次的 4 相同。',
+          },
+        },
+        {
+          title: '扫描完成',
+          detail: '循环结束，直接返回 ans。',
+          state: {
+            values: [4, 1, 2, 1, 2],
+            index: 5,
+            bits: 4,
+            answer: '4',
+            note: 'index = 5 表示已经越过最后一个元素。',
+          },
+        },
+      ],
+    },
+  },
+
+  '169': {
+    id: 169,
+    title: '多数元素',
+    slug: 'majority-element',
+    difficulty: '简单',
+    category: '技巧',
+    summary:
+      '维护候选值和抵消计数，让不同元素两两抵消；多数元素因为数量超过一半，必然能留在最后。',
+    input: '一个非空整数数组 nums，题目保证存在出现次数超过 n / 2 的多数元素。',
+    output: '返回多数元素的数值。',
+    core: 'cnt 为 0 时更换候选；当前元素等于候选则 cnt 加一，否则 cnt 减一。',
+    walkthrough: [
+      '初始时 cand = None、cnt = 0，表示还没有有效候选。',
+      '扫描到新元素 x 时，若 cnt 为 0，先把 cand 更新为 x。',
+      '随后比较 x 与 cand：相同就增加支持数，不同就减少支持数。',
+      ' cnt 归零意味着此前候选和反对者已两两抵消，下一项可以重新担任候选。',
+      '全部扫描完后，cand 就是保证存在的多数元素。',
+    ],
+    pitfalls: [
+      '先更新候选再比较的顺序不能颠倒，否则 cnt = 0 时可能错误地给旧候选加减。',
+      'cnt 是抵消后的余额，不是候选在完整数组中的真实出现次数。',
+      '不能在 cnt 归零时立即返回 None 或退出循环。',
+      '若输入没有严格超过 n / 2 的元素，最后候选可能没有 majority 保证。',
+    ],
+    observation: '把多数元素以外的每个元素都拿出来，也不够与多数元素一一抵消。',
+    mechanism:
+      'Boyer–Moore 投票把数组看成支持与反对的配对过程；真正多数至少比所有其他元素的总和多一项。',
+    invariant:
+      '扫描过程中，cnt 表示当前候选相对于已处理部分中未抵消反对者的净余额；cnt 为 0 时不存在有效候选。',
+    termination: '每个元素只进入一次计数更新，长度为 n 的循环结束后返回当前候选。',
+    counterexample:
+      '反例提醒：[1, 2] 没有严格多数；按这段代码扫描会返回 1，但“1 是多数元素”的结论不再成立。',
+    naive: '用哈希表统计频次并检查 count > n / 2，时间为 O(n)，但额外空间为 O(n)。',
+    time: 'O(n)',
+    timeNote: '单次扫描，每个元素只触发一次比较和一次计数更新。',
+    space: 'O(1)',
+    spaceNote: '只保存候选 cand 与余额 cnt 两个变量。',
+    keyLines: [
+      {
+        start: 3,
+        end: 11,
+        text: '        cand, cnt = None, 0\n        for x in nums:\n            if cnt == 0:\n                cand = x\n            if x == cand:\n                cnt += 1\n            else:\n                cnt -= 1\n        return cand',
+      },
+    ],
+    challenge: {
+      question: '如果要求找出所有出现次数超过 n / 3 的元素，为什么不能只维护一个候选？',
+      hint: '这样的元素最多有几个？两个候选被同一批反对者抵消时怎么办？',
+      answer: '最多两个；可维护两个候选及各自余额，并在候选相同时合并计数、归零时重新补位。',
+    },
+    similar: [
+      {
+        id: 229,
+        title: '多数元素 II',
+        slug: 'majority-element-ii',
+        role: '同类巩固',
+        reason: '扩展同一套候选抵消思想；超过 n / 3 的元素最多两个，需要更复杂的候选维护。',
+      },
+      {
+        id: 347,
+        title: '前 K 个高频元素',
+        slug: 'top-k-frequent-elements',
+        role: '进阶挑战',
+        reason: '同样从频次信息出发，但目标变成 top-k 选择，不能只保留一个候选。',
+      },
+    ],
+    viz: {
+      family: 'trick',
+      data: { values: [2, 2, 1, 1, 1, 2, 2] },
+      frames: [
+        {
+          title: '初始状态',
+          detail: '没有候选，余额为 0。',
+          state: {
+            values: [2, 2, 1, 1, 1, 2, 2],
+            index: -1,
+            bits: 0,
+            answer: 'cand = None，cnt = 0',
+            note: 'bits 借位显示候选值，None 记为 0；cnt 才是抵消余额。',
+          },
+        },
+        {
+          title: '2 成为候选',
+          detail: 'cnt 为 0，先把 cand 设为 2，再因支持而增加到 1。',
+          state: {
+            values: [2, 2, 1, 1, 1, 2, 2],
+            index: 0,
+            bits: 2,
+            answer: 'cand = 2，cnt = 1',
+            note: 'bits = 2 是候选寄存器值，不是二进制位计数。',
+          },
+        },
+        {
+          title: '再次支持 2',
+          detail: '当前元素等于候选，余额增加到 2。',
+          state: {
+            values: [2, 2, 1, 1, 1, 2, 2],
+            index: 1,
+            bits: 2,
+            answer: 'cand = 2，cnt = 2',
+            note: 'cnt = 2 表示当前有两份未抵消的支持。',
+          },
+        },
+        {
+          title: '1 反对 2',
+          detail: '一个反对者抵消一份支持，余额降为 1。',
+          state: {
+            values: [2, 2, 1, 1, 1, 2, 2],
+            index: 2,
+            bits: 2,
+            answer: 'cand = 2，cnt = 1',
+            note: '候选没有改变，只有余额变化。',
+          },
+        },
+        {
+          title: '余额归零',
+          detail: '第二个 1 抵消最后一份支持，cand 暂时失效。',
+          state: {
+            values: [2, 2, 1, 1, 1, 2, 2],
+            index: 3,
+            bits: 2,
+            answer: 'cand = 2，cnt = 0',
+            note: 'cnt = 0 后，下一项会重新指定候选。',
+          },
+        },
+        {
+          title: '1 重新成为候选',
+          detail: '余额为 0，cand 更新为 1，随后余额增加到 1。',
+          state: {
+            values: [2, 2, 1, 1, 1, 2, 2],
+            index: 4,
+            bits: 1,
+            answer: 'cand = 1，cnt = 1',
+            note: '更换候选不代表此前元素被删除，只代表抵消后的新起点。',
+          },
+        },
+        {
+          title: '2 再次抵消 1',
+          detail: '当前 2 反对候选 1，余额降为 0。',
+          state: {
+            values: [2, 2, 1, 1, 1, 2, 2],
+            index: 5,
+            bits: 1,
+            answer: 'cand = 1，cnt = 0',
+            note: 'bits 保留旧候选 1，但 cnt = 0 表示它已没有净支持。',
+          },
+        },
+        {
+          title: '最后的 2 成为候选',
+          detail: 'cnt 为 0，cand 改为 2，余额变为 1。',
+          state: {
+            values: [2, 2, 1, 1, 1, 2, 2],
+            index: 6,
+            bits: 2,
+            answer: 'cand = 2，cnt = 1',
+            note: '最终未抵消的一份支持属于 2。',
+          },
+        },
+        {
+          title: '返回候选',
+          detail: '扫描结束，返回 cand = 2。',
+          state: {
+            values: [2, 2, 1, 1, 1, 2, 2],
+            index: 7,
+            bits: 2,
+            answer: '2',
+            note: '此结论依赖题目“严格多数存在”的前提。',
+          },
+        },
+      ],
+    },
+  },
+
+  '75': {
+    id: 75,
+    title: '颜色分类',
+    slug: 'sort-colors',
+    difficulty: '中等',
+    category: '技巧',
+    summary:
+      '用扫描指针与两条区域边界，把 0、1、2 分别归入已完成的前缀、待扫描中段和反向累积的后缀。',
+    input: '一个只包含 0、1、2 的数组 nums，需要原地排序。',
+    output: '不返回新数组；直接把 nums 调整成所有 0、然后所有 1、然后所有 2。',
+    core:
+      'i 扫描当前元素，j 是 0 区后的第一个位置，k 是 2 区前的边界；遇到 2 时交换后不前进 i。',
+    walkthrough: [
+      '令 i = j = 0、k = n - 1，初始时三个区域都还没有元素。',
+      '若 nums[i] = 0，与 nums[j] 交换，把 0 放进左侧区域，然后同时右移 i 与 j。',
+      '若 nums[i] = 1，它已经位于中段，只右移 i。',
+      '若 nums[i] = 2，与 nums[k] 交换并左移 k；换进来的值尚未检查，所以 i 不动。',
+      '当 i > k 时，未扫描中段为空，排序完成。',
+    ],
+    pitfalls: [
+      '遇到 2 后不能习惯性地执行 i += 1，否则可能跳过从右侧换入的值。',
+      'j 不是扫描指针，它始终指向 0 区之后的位置。',
+      '交换 0 时，j<i 则 nums[j] 必为 0，j==i 则是当前格与自身交换；不会把未检查的 1 换到 i。',
+      '循环条件是 i <= k，不是 i < k；边界元素也需要处理。',
+    ],
+    observation: '0 只需要移动到左侧，2 可以交换到右侧，1 可以原地留下，因此不必做普通比较排序。',
+    mechanism:
+      '每次操作都把已排序区域扩大，或把扫描指针向后推进；2 的特殊分支用原地交换缩小未知后缀。',
+    invariant:
+      'nums[0..j-1] 全为 0，nums[i..k] 尚未归类，nums[k+1..n-1] 全为 2，且 j <= i <= k + 1。',
+    termination:
+      'i 右移、k 左移都会缩小未处理区间；遇到 2 时虽然 i 不动，但 k 至少左移一格，因此最多 n 次迭代。',
+    counterexample:
+      '反例提醒：[2,1,2] 是合法输入。若在 2 的分支错误地执行 i+=1，第一次交换后 k=1，扫描会跳过下标 0 上再次换入的 2，最终错误留下 [2,1,2]；正确做法保持 i=0，继续检查换入值。',
+    naive: '直接调用排序或先统计 0、1、2 的个数再重写数组；额外空间取决于实现，普通比较排序通常为 O(n log n)。',
+    time: 'O(n)',
+    timeNote: 'i 与 k 共同把未知区间缩到空，所有交换和判断都是常数时间。',
+    space: 'O(1)',
+    spaceNote: '只使用 i、j、k 三个整数，排序完全在输入数组内完成。',
+    keyLines: [
+      {
+        start: 6,
+        end: 17,
+        text: '        i = j = 0\n        k = len(nums) - 1\n        while i <= k:\n            if nums[i] == 0:\n                nums[i], nums[j] = nums[j], nums[i]\n                j += 1\n                i += 1\n            elif nums[i] == 2:\n                nums[i], nums[k] = nums[k], nums[i]\n                k -= 1\n            else:\n                i+=1',
+      },
+    ],
+    challenge: {
+      question: '如果颜色增加到四种，能否继续只用两个边界？',
+      hint: '两种颜色可以借左右边界归档，四种颜色需要为哪些已完成区域保留位置？',
+      answer: '不能直接照搬；需要为多个已完成颜色分别维护边界，扫描指针与这些边界的先后关系也要重新设计。',
+    },
+    similar: [
+      {
+        id: 283,
+        title: '移动零',
+        slug: 'move-zeroes',
+        role: '前置练习',
+        reason: '只区分零与非零，是理解原地双指针稳定划分的更简单版本。',
+      },
+      {
+        id: 324,
+        title: '摆动排序 II',
+        slug: 'wiggle-sort-ii',
+        role: '进阶挑战',
+        reason: '同样要求重排数组，但目标包含相邻大小关系与中位数分区，约束更强。',
+      },
+    ],
+    viz: {
+      family: 'trick',
+      data: { values: [2, 0, 2, 1, 1, 0] },
+      frames: [
+        {
+          title: '初始化三条边界',
+          detail: 'i = 0、j = 0、k = 5，所有区域尚待建立。',
+          state: {
+            values: [2, 0, 2, 1, 1, 0],
+            index: 0,
+            low: 0,
+            high: 5,
+            answer: '扫描开始',
+            note: 'index 是 i，low 是 j（0 区后边界），high 是 k（2 区前边界）。',
+          },
+        },
+        {
+          title: '把 2 换到右端',
+          detail: 'nums[0] 与 nums[5] 交换；k 左移，i 保持 0。',
+          state: {
+            values: [0, 0, 2, 1, 1, 2],
+            index: 0,
+            low: 0,
+            high: 4,
+            answer: '右侧多了一个 2',
+            note: '换入的 0 还没有被检查，所以 i 不能前进。',
+          },
+        },
+        {
+          title: '归入第一个 0',
+          detail: '当前 0 与 j 位置的 0 交换，i、j 同时右移。',
+          state: {
+            values: [0, 0, 2, 1, 1, 2],
+            index: 1,
+            low: 1,
+            high: 4,
+            answer: '0 区长度变为 1',
+            note: '左前缀 [0] 已经完成。',
+          },
+        },
+        {
+          title: '归入第二个 0',
+          detail: '当前 0 与 j 位置的 0 交换，i、j 继续右移。',
+          state: {
+            values: [0, 0, 2, 1, 1, 2],
+            index: 2,
+            low: 2,
+            high: 4,
+            answer: '0 区长度变为 2',
+            note: '左前缀 [0, 0] 已经完成。',
+          },
+        },
+        {
+          title: '把内部 2 换到右边界',
+          detail: 'nums[2] 与 nums[4] 交换；k 左移到 3，i 仍为 2。',
+          state: {
+            values: [0, 0, 1, 1, 2, 2],
+            index: 2,
+            low: 2,
+            high: 3,
+            answer: '右侧 2 区已形成',
+            note: '换入的 1 将在下一步原地保留。',
+          },
+        },
+        {
+          title: '保留第一个 1',
+          detail: 'nums[2] = 1，已经位于中段，只移动 i。',
+          state: {
+            values: [0, 0, 1, 1, 2, 2],
+            index: 3,
+            low: 2,
+            high: 3,
+            answer: '中段已有 1',
+            note: 'j 与 k 都不需要移动。',
+          },
+        },
+        {
+          title: '扫描越过右边界',
+          detail: '处理第二个 1 后 i = 4，而 k = 3，循环结束。',
+          state: {
+            values: [0, 0, 1, 1, 2, 2],
+            index: 4,
+            low: 2,
+            high: 3,
+            answer: '[0, 0, 1, 1, 2, 2]',
+            note: 'i > k 表示未知区间为空。',
+          },
+        },
+      ],
+    },
+  },
+
+  '31': {
+    id: 31,
+    title: '下一个排列',
+    slug: 'next-permutation',
+    difficulty: '中等',
+    category: '技巧',
+    summary:
+      '先找到最右边可增大的一对相邻元素，再选一个刚好的后继值替换枢轴，最后把递减后缀翻成递增。',
+    input: '一个整数数组 nums，需要原地变成按字典序下一个排列。',
+    output: '原地修改 nums；若当前已经是最大排列，则改成最小排列。',
+    core: '从右向左找第一个 nums[i] < nums[i + 1] 的位置，交换右侧严格更大的最小值，再反转 i 后的后缀。',
+    walkthrough: [
+      '从倒数第二项开始向左扫描，跳过所有 nums[i] >= nums[i + 1] 的非递增相邻对。',
+      '第一个停止的位置就是枢轴 i；它右侧的后缀保持非递增，因而是可重排的最大状态。',
+      '若枢轴存在，从右端找第一个严格大于 nums[i] 的 nums[j]，它是最小可用后继。',
+      '交换 nums[i] 与 nums[j]，然后用双指针反转 i 右侧的后缀，使其变成最小递增排列。',
+      '若整个数组都非递增，则没有枢轴；此时 i = -1，反转整个数组得到最小排列。',
+    ],
+    pitfalls: [
+      '找枢轴时判断 >= 而不是 >；相等元素不能形成字典序增长点。',
+      '找后继时也必须严格大于，使用 <= 继续向左，否则会选到与枢轴相等的值。',
+      '交换后必须反转后缀，只交换得到的结果还不是下一个排列。',
+      '没有枢轴时不能直接返回，要执行 i + 1 = 0 的整体反转。',
+    ],
+    observation: '一个排列的后缀越靠右，调整它对整体字典序的影响越小；因此优先改变最右边能改变的深度。',
+    mechanism:
+      '枢轴保证存在比当前排列更大的方案；最小严格后继保证前缀增幅最小；后缀反转保证在新增益下后缀最小。',
+    invariant:
+      '找枢轴时，i 右侧所有相邻对都非递增；交换后，i 右侧仍为非递增；反转过程始终保持内外两侧已经就位。',
+    termination:
+      '两段索引都严格向中间移动：第一段 i 每轮减一，第二段 l、r 每轮各移动一格，因此最多线性次操作。',
+    counterexample:
+      '反例提醒：若找枢轴时误写为 nums[i] > nums[i + 1]，输入 [1,2,2] 会把下标 1 的相等相邻对误当作增长点；随后寻找严格后继时 j 会越过下标 0，触发错误的负数索引访问。正确写法应先跳过 2>=2，再在下标 0 找到枢轴。',
+    naive: '枚举全部排列并排序后寻找当前排列的下一个，时间与组合数量相关，无法高效处理一般输入。',
+    time: 'O(n)',
+    timeNote: '枢轴扫描、后继搜索与后缀反转覆盖的区间合计至多线性长度。',
+    space: 'O(1)',
+    spaceNote: '只使用固定数量的索引，交换与反转均原地完成。',
+    keyLines: [
+      {
+        start: 6,
+        end: 19,
+        text: '        n = len(nums)\n        i = n - 2\n        while i >= 0 and nums[i] >= nums[i + 1]:\n            i-=1\n        if i >= 0:\n            j = n-1\n            while nums[j] <= nums[i]:\n                j-=1\n            nums[i],nums[j] = nums[j], nums[i]\n        l,r = i + 1, n -1\n        while l < r:\n            nums[l], nums[r] = nums[r], nums[l]\n            l += 1\n            r -= 1',
+      },
+    ],
+    challenge: {
+      question: '为什么交换后必须反转整个后缀，而不是只把后继换到最左端？',
+      hint: '交换前后缀是非递增的；固定新前缀后，怎样排列剩余值字典序最小？',
+      answer: '交换后后缀仍非递增；把它翻成递增，才能在保持新增益的同时让后缀字典序最小。',
+    },
+    similar: [
+      {
+        id: 189,
+        title: '轮转数组',
+        slug: 'rotate-array',
+        role: '同类巩固',
+        reason: '另一种原地数组重排；反转技巧很常用，但目标从字典序后继变成循环移位。',
+      },
+      {
+        id: 556,
+        title: '下一个更大元素 III',
+        slug: 'next-greater-number-iii',
+        role: '进阶挑战',
+        reason: '同样涉及后继选择和后缀反转，但输入是数字，还要处理位数与 32 位整数边界。',
+      },
+    ],
+    viz: {
+      family: 'trick',
+      data: { values: [1, 2, 3] },
+      frames: [
+        {
+          title: '从右侧开始扫描',
+          detail: 'n = 3，令 i = 1；low = 2、high = 2 标出当前后缀。',
+          state: {
+            values: [1, 2, 3],
+            index: 1,
+            low: 2,
+            high: 2,
+            answer: 'i = 1',
+            note: 'index 是扫描/枢轴位置 i；low/high 表示待检查后缀边界。',
+          },
+        },
+        {
+          title: '找到增长点',
+          detail: 'nums[1] = 2 < nums[2] = 3，扫描立即停止。',
+          state: {
+            values: [1, 2, 3],
+            index: 1,
+            low: 2,
+            high: 2,
+            answer: '枢轴 i = 1',
+            note: '右侧只有一项，后缀本身已经非递增。',
+          },
+        },
+        {
+          title: '准备寻找后继',
+          detail: '枢轴存在，把 j 初始化为最右端 2。',
+          state: {
+            values: [1, 2, 3],
+            index: 1,
+            low: 2,
+            high: 2,
+            answer: 'j = 2',
+            note: 'j 会从右向左寻找第一个严格大于 nums[i] 的值。',
+          },
+        },
+        {
+          title: '选中最小严格后继',
+          detail: 'nums[2] = 3 > nums[1] = 2，因此 j = 2 满足条件。',
+          state: {
+            values: [1, 2, 3],
+            index: 1,
+            low: 2,
+            high: 2,
+            answer: '后继 j = 2',
+            note: '从右往左找到的第一个更大值就是右侧最小更大值。',
+          },
+        },
+        {
+          title: '交换枢轴与后继',
+          detail: '交换位置 1 和 2，数组变为 [1, 3, 2]。',
+          state: {
+            values: [1, 3, 2],
+            index: 1,
+            low: 2,
+            high: 2,
+            answer: '前缀增幅完成',
+            note: '现在需要让枢轴后的后缀字典序尽可能小。',
+          },
+        },
+        {
+          title: '确定反转区域',
+          detail: '令 l = i + 1 = 2、r = n - 1 = 2。',
+          state: {
+            values: [1, 3, 2],
+            index: 1,
+            low: 2,
+            high: 2,
+            answer: '反转区间 [2, 2]',
+            note: 'low/high 现在明确表示反转双指针 l 和 r。',
+          },
+        },
+        {
+          title: '得到下一个排列',
+          detail: 'l < r 不成立，后缀无需实际交换，结果为 [1, 3, 2]。',
+          state: {
+            values: [1, 3, 2],
+            index: 1,
+            low: 2,
+            high: 2,
+            answer: '[1, 3, 2]',
+            note: '这个例子的后缀只有一项；更长后缀会执行成对交换。',
+          },
+        },
+      ],
+    },
+  },
+
+  '287': {
+    id: 287,
+    title: '寻找重复数',
+    slug: 'find-the-duplicate-number',
+    difficulty: '中等',
+    category: '技巧',
+    summary:
+      '把 nums[i] 看成从节点 i 指向节点 nums[i] 的边；重复值制造入度冲突，于是图中出现环，用 Floyd 找环入口。',
+    input: '一个长度为 n + 1 的正整数数组 nums，所有元素都在 [1, n] 内且恰好有一个值重复，可重复多次。',
+    output: '返回重复的正整数值，不能修改原数组。',
+    core: '先让 slow 走一步、fast 走两步直到相遇，再把一个指针重置到 0，双方同步一步寻找环入口。',
+    walkthrough: [
+      '将数值 i 当作链表节点，节点 i 的后继是 nums[i]；这里说的节点值不是数组下标。',
+      'slow 与 fast 都从节点值 0 出发，虽然 0 不在题目保证的 [1, n] 范围内，但它只是 Floyd 的虚拟起点。',
+      '第一阶段 slow 每次执行 slow = nums[slow]，fast 每次执行 fast = nums[nums[fast]]，直到两者值相等。',
+      '相遇点一定位于环上。把 p 重置为 0，q 保持相遇值。',
+      '第二阶段 p、q 都每次走一条边；再次相等时的节点值就是环入口，也就是重复数字。',
+    ],
+    pitfalls: [
+      '不要把 slow、fast、p、q 在某一时刻解释成当前数组下标；它们保存的是边指向的节点值。',
+      '只有真正访问 nums[slow] 或 nums[fast] 时，该值才作为读取数组的索引。',
+      '第一阶段必须推进 fast 两步；只走一步会退化成普通遍历，可能找不到环入口。',
+      '相遇后不能直接返回相遇值；环入口通常与第一次相遇点不同。',
+      '不能用排序或集合检测假装满足 O(1) 额外空间；前者可能修改数组，后者需要 O(n) 空间。',
+    ],
+    observation: '节点数多于可用值域，重复值让某个值对应多个前驱，从起点沿后继前进必然进入循环。',
+    mechanism:
+      '设起点到环入口距离为 a，入口到相遇点距离为 b；fast 比 slow 多走整数圈，重置一个指针后同步前进 a 步会在入口相遇。',
+    invariant:
+      'slow 始终沿 i -> nums[i] 的边前进；第一阶段 fast 与 slow 都在同一可达链上，相遇后 slow 位于环上；第二阶段 q 保持在环上。',
+    termination:
+      '有限节点与确定性后继保证第一阶段必相遇；第二阶段两个指针到入口的剩余距离相同，因此必在入口相遇。',
+    counterexample:
+      '反例提醒：把相遇值直接当作答案会在 [1, 3, 4, 2, 2] 上得到 4，但真实重复值是 2；相遇点只是环上节点。',
+    naive: '用集合记录已见数值，遇到重复即返回；时间 O(n)，但需要 O(n) 额外空间。',
+    time: 'O(n)',
+    timeNote: 'Floyd 两阶段都是沿确定性指针链前进，总步数为线性级别。',
+    space: 'O(1)',
+    spaceNote: '只维护 slow、fast、p、q 四个数值变量，原数组不被修改。',
+    keyLines: [
+      {
+        start: 3,
+        end: 12,
+        text: '        slow = fast = 0\n        while True:\n            slow = nums[slow]\n            fast = nums[nums[fast]]\n            if slow == fast:\n                break\n        p, q = 0, slow\n        while p != q:\n            p, q = nums[p], nums[q]\n        return p',
+      },
+    ],
+    challenge: {
+      question: '为什么重置后的 p 与 q 每次走一步就会相遇，而不是继续以不同速度绕圈？',
+      hint: '设起点到入口距离为 a，环长为 L；第一次相遇时 fast 比 slow 多走整数圈。',
+      answer: '设 b 为环入口到第一次相遇点的距离。slow 走 a+b，fast 走 2(a+b)，故 2(a+b)=a+b+kL，得到 a=kL-b。重置后双方各走 a 步：p 从起点到入口，q 在环上走 a≡-b (mod L) 也到入口，因此再次相等。',
+    },
+    similar: [
+      {
+        id: 141,
+        title: '环形链表',
+        slug: 'linked-list-cycle',
+        role: '前置练习',
+        reason: '单独练习 Floyd 快慢指针的判环第一阶段，结构更直观。',
+      },
+      {
+        id: 142,
+        title: '环形链表 II',
+        slug: 'linked-list-cycle-ii',
+        role: '同类巩固',
+        reason: '使用完全相同的两阶段 Floyd 过程，目标也是定位环入口。',
+      },
+    ],
+    viz: {
+      family: 'trick',
+      data: { values: [1, 3, 4, 2, 2] },
+      frames: [
+        {
+          title: '把数组编码成指针链',
+          detail: '虚拟起点 0 指向 nums[0] = 1，随后每个节点值 x 指向 nums[x]。',
+          state: {
+            values: [1, 3, 4, 2, 2],
+            index: 0,
+            low: 0,
+            high: 0,
+            answer: 'slow = 0，fast = 0',
+            note: 'low/high 保存 slow/fast 的节点值，不是数组下标；index 固定为演示步骤编号 0。',
+          },
+        },
+        {
+          title: '第一次快慢推进',
+          detail: 'slow 走 0 -> 1；fast 走 0 -> 1 -> 3。',
+          state: {
+            values: [1, 3, 4, 2, 2],
+            index: 0,
+            low: 1,
+            high: 3,
+            answer: '尚未相遇',
+            note: '读取 nums[0] 和 nums[1] 时才使用值作为索引；当前 low/high 本身仍是节点值。',
+          },
+        },
+        {
+          title: '第二次快慢推进',
+          detail: 'slow 走 1 -> 3；fast 走 3 -> 2 -> 4。',
+          state: {
+            values: [1, 3, 4, 2, 2],
+            index: 0,
+            low: 3,
+            high: 4,
+            answer: '尚未相遇',
+            note: 'low/high 保存节点值，不是数组下标；fast 的两步分别是 nums[3] = 2 和 nums[2] = 4。',
+          },
+        },
+        {
+          title: '第三次快慢推进',
+          detail: 'slow 走 3 -> 2；fast 走 4 -> 2 -> 4。',
+          state: {
+            values: [1, 3, 4, 2, 2],
+            index: 0,
+            low: 2,
+            high: 4,
+            answer: '尚未相遇',
+            note: 'low/high 是节点值而非数组下标；fast 已进入 2 <-> 4 的循环，slow 尚未追上。',
+          },
+        },
+        {
+          title: '第一阶段相遇',
+          detail: 'slow 走 2 -> 4；fast 走 4 -> 2 -> 4，二者都停在节点值 4。',
+          state: {
+            values: [1, 3, 4, 2, 2],
+            index: 0,
+            low: 4,
+            high: 4,
+            answer: '相遇值 = 4',
+            note: 'low/high 是节点值，不是数组下标；4 是环上相遇点，不是重复答案。',
+          },
+        },
+        {
+          title: '重置一个指针',
+          detail: '令 p = 0，q 保持相遇值 4。',
+          state: {
+            values: [1, 3, 4, 2, 2],
+            index: 0,
+            low: 0,
+            high: 4,
+            answer: 'p = 0，q = 4',
+            note: 'low/high 现在表示 p/q 的节点值；第二阶段双方都只走一步。',
+          },
+        },
+        {
+          title: '同步走第一步',
+          detail: 'p 从 0 到 1，q 从 4 到 2。',
+          state: {
+            values: [1, 3, 4, 2, 2],
+            index: 0,
+            low: 1,
+            high: 2,
+            answer: '尚未相遇',
+            note: 'low/high 仍是 p/q 的节点值，不是数组下标；p 接近入口，q 绕向入口。',
+          },
+        },
+        {
+          title: '同步走第二步',
+          detail: 'p 从 1 到 3，q 从 2 到 4。',
+          state: {
+            values: [1, 3, 4, 2, 2],
+            index: 0,
+            low: 3,
+            high: 4,
+            answer: '尚未相遇',
+            note: '节点值 3 由 nums[1] 得到，节点值 4 由 nums[2] 得到。',
+          },
+        },
+        {
+          title: '同步走第三步',
+          detail: 'p 从 3 到 2，q 从 4 到 2。',
+          state: {
+            values: [1, 3, 4, 2, 2],
+            index: 0,
+            low: 2,
+            high: 2,
+            answer: '入口值 = 2',
+            note: '双方在环入口相遇；low/high 是相等节点值，不是对数组位置的断言。',
+          },
+        },
+        {
+          title: '返回环入口',
+          detail: 'p = q = 2，函数返回 2。',
+          state: {
+            values: [1, 3, 4, 2, 2],
+            index: 0,
+            low: 2,
+            high: 2,
+            answer: '2',
+            note: 'low/high 保存相等节点值，不是数组下标；重复值正是环入口，数组内容保持不变。',
+          },
+        },
+      ],
+    },
+  },
+};
+
+export const SOURCES: string[] = [
+  'https://leetcode.cn/problems/single-number/',
+  'https://leetcode.cn/problems/majority-element/',
+  'https://leetcode.cn/problems/sort-colors/',
+  'https://leetcode.cn/problems/next-permutation/',
+  'https://leetcode.cn/problems/find-the-duplicate-number/',
+  'https://leetcode.cn/problems/single-number-ii/',
+  'https://leetcode.cn/problems/single-number-iii/',
+  'https://leetcode.cn/problems/majority-element-ii/',
+  'https://leetcode.cn/problems/top-k-frequent-elements/',
+  'https://leetcode.cn/problems/move-zeroes/',
+  'https://leetcode.cn/problems/wiggle-sort-ii/',
+  'https://leetcode.cn/problems/rotate-array/',
+  'https://leetcode.cn/problems/next-greater-number-iii/',
+  'https://leetcode.cn/problems/linked-list-cycle/',
+  'https://leetcode.cn/problems/linked-list-cycle-ii/',
+];
