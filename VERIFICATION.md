@@ -1,6 +1,6 @@
 # 验证报告
 
-日期：2026-11-25。以下结果来自本地实际执行；历史 Accepted 不等同于本次重新判题。
+日期：2026-11-25。以下结果来自本地与 GitHub Pages 的实际执行；历史 Accepted 不等同于本次重新判题。
 
 ## 内容与代码覆盖
 
@@ -80,7 +80,15 @@ npm run build
 
 ## 发布
 
-发布状态将在实际推送和 Pages 检查后更新。未完成在线检查前，不声称网站已上线。
+- 源码仓库：https://github.com/simonshi-stu/leetcode-hot100-visual-guide
+- 线上网站：https://simonshi-stu.github.io/leetcode-hot100-visual-guide/
+- Pages 构建方式：GitHub Actions，工作流 `.github/workflows/deploy-pages.yml`。
+- 已核验网站内容的提交：`774e5e198aae0d8b2dccfab1b5f2b12b1adfd4e6`。
+- 部署运行：[45584401873](https://github.com/simonshi-stu/leetcode-hot100-visual-guide/actions/runs/45584401873)，`completed / success`。
+
+线上使用真实 Pages 地址执行 **13/13 项检查**，全部通过：线上 HTML 引用的 CSS/JS 与本地最终构建一致；首页显示 88 题；第 1、35、76、200、207 题通过 `/?p=题号` 直接打开并刷新，标题与图示正确，桌面无横向溢出；207 关键行定位、Python3 教学版标识与 `.py` 下载内容正确；390×844 手机视口的首页与第 76 题无横向溢出；没有 HTTP 失败请求、`pageerror` 或 console error。记录：`.tmp/online-validation.json`。
+
+线上验证基于网站内容提交 `774e5e1`；后续仅发布本文档的提交不会改变已核验的静态资源。
 
 ## 已知限制
 

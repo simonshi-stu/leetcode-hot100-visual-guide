@@ -2,6 +2,9 @@
 
 面向初学者的中文可视化题解网站，完整覆盖本地数据集中已解决的 **88 道** LeetCode Hot 100 题目。页面采用米白纸张、近黑粗体、电光蓝重点和黑色分隔线的研究报告风格。
 
+- 线上网站：https://simonshi-stu.github.io/leetcode-hot100-visual-guide/
+- 源码仓库：https://github.com/simonshi-stu/leetcode-hot100-visual-guide
+
 ## 已交付内容
 
 - 88 道独立题目视图，分享地址为 `/?p=题号`，静态托管下可直接打开和刷新。
@@ -86,15 +89,12 @@ node scripts/browser-check.mjs
 仓库使用 `base: './'`，查询参数路由不依赖服务器重写。`.github/workflows/deploy-pages.yml` 在推送 `main` 时构建并发布 `dist`。首次启用时，仓库管理员需在 **Settings → Pages → Build and deployment** 选择 **GitHub Actions**。
 
 ```bash
-git init
-git add .
-git commit -m "Build complete 88-problem visual guide"
-git branch -M main
-git remote add origin https://github.com/<实际账号>/<实际仓库>.git
-git push -u origin main
+git add <本次修改的文件>
+git commit -m "描述本次修改"
+git push origin main
 ```
 
-只发布网站所需源码、公开代码、文档、截图和构建配置。`.gitignore` 排除 `node_modules`、`.tmp`、原始快照、日志和环境变量文件。详细来源与许可证见 [ATTRIBUTION.md](ATTRIBUTION.md)。
+仓库与 Pages 已启用。只发布网站所需源码、公开代码、文档、截图和构建配置。`.gitignore` 排除 `node_modules`、`.tmp`、原始快照、日志和环境变量文件。详细来源与许可证见 [ATTRIBUTION.md](ATTRIBUTION.md)，实际验证结果见 [VERIFICATION.md](VERIFICATION.md)。
 
 ## 已知限制
 
